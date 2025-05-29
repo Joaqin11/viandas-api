@@ -1,0 +1,122 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|c:\\users\\pc-gaming\\documents\\desarrollo\\backend\\accuviandas\\accuviandas\\data\\menudbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|solutionrelative:accuviandas\\data\\menudbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|c:\\users\\pc-gaming\\documents\\desarrollo\\backend\\accuviandas\\accuviandas\\controllers\\menucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|solutionrelative:accuviandas\\controllers\\menucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|c:\\users\\pc-gaming\\documents\\desarrollo\\backend\\accuviandas\\accuviandas\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|solutionrelative:accuviandas\\models\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|c:\\users\\pc-gaming\\documents\\desarrollo\\backend\\accuviandas\\accuviandas\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|solutionrelative:accuviandas\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|c:\\users\\pc-gaming\\documents\\desarrollo\\backend\\accuviandas\\accuviandas\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|solutionrelative:accuviandas\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|c:\\users\\pc-gaming\\documents\\desarrollo\\backend\\accuviandas\\accuviandas\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{C41543C8-168D-48DF-98FF-792936B485B8}|AccuViandas\\AccuViandas.csproj|solutionrelative:accuviandas\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MenuDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\Data\\MenuDbContext.cs",
+              "RelativeDocumentMoniker": "AccuViandas\\Data\\MenuDbContext.cs",
+              "ToolTip": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\Data\\MenuDbContext.cs",
+              "RelativeToolTip": "AccuViandas\\Data\\MenuDbContext.cs",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAcwEoAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-27T07:04:45.428Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Role.cs",
+              "DocumentMoniker": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\Models\\Role.cs",
+              "RelativeDocumentMoniker": "AccuViandas\\Models\\Role.cs",
+              "ToolTip": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\Models\\Role.cs",
+              "RelativeToolTip": "AccuViandas\\Models\\Role.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-27T06:49:35.285Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\Models\\User.cs",
+              "RelativeDocumentMoniker": "AccuViandas\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\Models\\User.cs",
+              "RelativeToolTip": "AccuViandas\\Models\\User.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAxwA4AAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-27T06:47:20.213Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MenuController.cs",
+              "DocumentMoniker": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\Controllers\\MenuController.cs",
+              "RelativeDocumentMoniker": "AccuViandas\\Controllers\\MenuController.cs",
+              "ToolTip": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\Controllers\\MenuController.cs",
+              "RelativeToolTip": "AccuViandas\\Controllers\\MenuController.cs",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAwwCcAAABZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-27T05:36:15.029Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\appsettings.json",
+              "RelativeDocumentMoniker": "AccuViandas\\appsettings.json",
+              "ToolTip": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\appsettings.json",
+              "RelativeToolTip": "AccuViandas\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-05-27T05:24:54.315Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\Program.cs",
+              "RelativeDocumentMoniker": "AccuViandas\\Program.cs",
+              "ToolTip": "C:\\Users\\PC-GAMING\\Documents\\Desarrollo\\Backend\\AccuViandas\\AccuViandas\\Program.cs",
+              "RelativeToolTip": "AccuViandas\\Program.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAgAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-27T05:22:51.448Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

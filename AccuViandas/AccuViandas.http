@@ -1,0 +1,6 @@
+@AccuViandas_HostAddress = http://localhost:5228
+
+GET {{AccuViandas_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
