@@ -23,6 +23,10 @@ namespace AccuViandas.Data
         public DbSet<Role> Roles { get; set; }
         // --- END NEW ---
 
+        // --- NEW: DbSet for UserMenuSelection ---
+        public DbSet<UserMenuSelection> UserMenuSelections { get; set; }
+        // --- END NEW ---
+
         // Método OnModelCreating (Opcional, pero útil para configuraciones avanzadas)
         // Este método se usa para configurar cómo las entidades se mapean a la base de datos.
         // Aquí podemos agregar reglas como índices únicos.
@@ -72,6 +76,32 @@ namespace AccuViandas.Data
                 new Role { Id = 2, Name = "User" },
                 new Role { Id = 3, Name = "Viewer" }
             );
+            // --- END NEW ---
+
+            // --- NEW: UserMenuSelection Model Configuration ---
+
+            // Configurar la relación One-to-Many entre User y UserMenuSelection
+            modelBuilder.Entity<UserMenuSelection>()
+                .HasOne(ums => ums.User) // Una selección tiene un usuario
+                .WithMany(u => u.UserMenuSelections) // Un usuario tiene muchas selecciones
+                .HasForeignKey(ums => ums.UserId) // La clave foránea en UserMenuSelection es UserId
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict); // Evita borrar usuarios si tienen selecciones
+
+            // Configurar la relación One-to-Many entre DailyMenu y UserMenuSelection
+            modelBuilder.Entity<UserMenuSelection>()
+                .HasOne(ums => ums.DailyMenu) // Una selección pertenece a un menú diario
+                .WithMany() // Un menú diario puede tener muchas selecciones (pero no necesitamos una colección directa en DailyMenu)
+                .HasForeignKey(ums => ums.DailyMenuId) // La clave foránea en UserMenuSelection es DailyMenuId
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade); // Si se borra un DailyMenu, sus selecciones también se borran
+
+            // Clave única compuesta para asegurar que un usuario solo pueda tener una selección activa por DailyMenu
+            //modelBuilder.Entity<UserMenuSelection>()
+            //    .HasIndex(ums => new { ums.UserId, ums.DailyMenuId, ums.IsActive })
+            //    .IsUnique()
+            //    .HasFilter("IsActive = 1"); // Solo aplica la unicidad si IsActive es TRUE
+
             // --- END NEW ---
 
             // Llama al método base para que EF Core pueda hacer sus configuraciones por defecto

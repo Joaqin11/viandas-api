@@ -1,0 +1,31 @@
+# Archivos de Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Archivos de salida de compilación
+bin/
+obj/
+
+# Archivos de depuración
+*.pdb
+
+# Archivos de base de datos temporales
+*.db
+*.db-shm
+*.db-wal
+
+# Archivos de logs
+*.log
+
+# Configs locales y del IDE
+.vscode/
+*.cache
+*.tmp
+
+# Otros archivos del sistema operativo
+Thumbs.db
+desktop.ini
+

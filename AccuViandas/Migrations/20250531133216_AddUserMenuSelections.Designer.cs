@@ -3,6 +3,7 @@ using System;
 using AccuViandas.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccuViandas.Migrations
 {
     [DbContext(typeof(MenuDbContext))]
-    partial class MenuDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250531133216_AddUserMenuSelections")]
+    partial class AddUserMenuSelections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
@@ -131,10 +134,6 @@ namespace AccuViandas.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Observation")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("SelectedCategory")
                         .HasColumnType("INTEGER");
 
@@ -148,7 +147,9 @@ namespace AccuViandas.Migrations
 
                     b.HasIndex("DailyMenuId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "DailyMenuId", "IsActive")
+                        .IsUnique()
+                        .HasFilter("IsActive = 1");
 
                     b.ToTable("UserMenuSelections");
                 });

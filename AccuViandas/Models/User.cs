@@ -16,5 +16,9 @@ namespace AccuViandas.Models
         public int RoleId { get; set; }
         // Propiedad de navegación para el rol
         public Role Role { get; set; } // Un usuario tiene UN objeto Role
+
+        // --- NEW: Propiedad de navegación para las selecciones del usuario ---
+        public ICollection<UserMenuSelection> UserMenuSelections { get; set; } = new List<UserMenuSelection>();
+        // --- END NEW ---
     }
 }
