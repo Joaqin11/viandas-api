@@ -10,6 +10,9 @@ using System.IdentityModel.Tokens.Jwt;   // NEW
 using System.Security.Claims;            // NEW
 using System.Text;                       // NEW
 using Microsoft.Extensions.Configuration; // NEW: Para IConfiguration
+using AccuViandas.Services; // NEW
+using Microsoft.AspNetCore.Authorization; // NEW (si no lo tenías ya)
+using System; // NEW (para Exception)
 
 namespace AccuViandas.Controllers
 {
@@ -19,13 +22,14 @@ namespace AccuViandas.Controllers
     {
         private readonly MenuDbContext _context;
         private readonly IConfiguration _configuration; // NEW: Para acceder a la configuración de JWT
-
+        private readonly IEmailService _emailService; // NEW: Declarar el servicio de email
 
         // Constructor para inyectar el contexto de la base de datos
-        public AuthController(MenuDbContext context, IConfiguration configuration) // NEW: Inyectar IConfiguration)
+        public AuthController(MenuDbContext context, IConfiguration configuration, IEmailService emailService) // NEW: Inyectar IEmailService) // NEW: Inyectar IConfiguration)
         {
             _context = context; 
             _configuration = configuration; // NEW: Asignar la configuración
+            _emailService = emailService; // NEW: Asignar el servicio de email
         }
 
         /// <summary>
@@ -42,15 +46,21 @@ namespace AccuViandas.Controllers
         public async Task<ActionResult> Register(UserRegistrationDto request)
         {
             // Validación básica
-            if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password) || string.IsNullOrWhiteSpace(request.RoleName))
+            if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password) || string.IsNullOrWhiteSpace(request.RoleName) || string.IsNullOrWhiteSpace(request.EmailAddress))
             {
-                return BadRequest("Username, password, and role are required.");
+                return BadRequest("Username, password, and email are required.");
             }
 
             // Verificar si el nombre de usuario ya existe
             if (await _context.Users.AnyAsync(u => u.Username == request.Username))
             {
                 return Conflict("Username already exists.");
+            }
+
+            // Verificar si el mail ya existe
+            if (await _context.Users.AnyAsync(u => u.EmailAddress  == request.EmailAddress))
+            {
+                return Conflict("Email already exists.");
             }
 
             // Buscar el rol por nombre
@@ -68,13 +78,15 @@ namespace AccuViandas.Controllers
             {
                 Username = request.Username,
                 PasswordHash = passwordHash,
-                RoleId = role.Id // Asigna el ID del rol encontrado
+                RoleId = role.Id, // Asigna el ID del rol encontrado
+                EmailAddress = request.EmailAddress // <-- ¡AÑADE ESTA LÍNEA!                                                   
             };
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            return Ok("User registered successfully!");
+            //return Ok("User registered successfully!");
+            return Ok(new { message = "User registered successfully!" }); // <-- ¡Devuelve un objeto JSON!
         }
 
         /// <summary>
@@ -168,6 +180,34 @@ namespace AccuViandas.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
         // --- END NEW --
+        
+        /// <summary>
+        /// Endpoint temporal para probar el envío de correos electrónicos.
+        /// Requiere autenticación como 'Admin'.
+        /// </summary>
+        [HttpPost("test-email")]
+        [Authorize(Roles = "Admin")] // Solo los administradores pueden usar este endpoint de prueba
+        public async Task<ActionResult> TestSendEmail([FromBody] TestEmailDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(dto.ToEmail) || string.IsNullOrWhiteSpace(dto.Subject) || string.IsNullOrWhiteSpace(dto.Body))
+            {
+                return BadRequest("ToEmail, Subject y Body son obligatorios.");
+            }
+
+            try
+            {
+                await _emailService.SendEmailAsync(dto.ToEmail, dto.Subject, dto.Body);
+                return Ok("¡Correo de prueba enviado exitosamente!");
+            }
+            catch (Exception ex)
+            {
+                // Loguea la excepción para depuración en la consola
+                Console.WriteLine($"Error al enviar correo de prueba: {ex.Message}");
+                // Devuelve un error 500 con detalles para el cliente
+                return StatusCode(500, $"Error al enviar correo de prueba: {ex.Message}. Detalles: {ex.InnerException?.Message}");
+            }
+        }
+        // --- FIN NEW: Endpoint Temporal ---
     }
 
     // --- Data Transfer Objects (DTOs) para las peticiones ---
@@ -178,6 +218,7 @@ namespace AccuViandas.Controllers
         public string Username { get; set; }
         public string Password { get; set; }
         public string RoleName { get; set; } // Para especificar el rol al registrar
+        public string EmailAddress { get; set; } // <-- ¡AÑADE ESTA LÍNEA!
     }
 
     public class UserLoginDto
@@ -193,5 +234,15 @@ namespace AccuViandas.Controllers
         public string Role { get; set; }
         public string Token { get; set; } // EL TOKEN JWT
     }
+
+    // --- NEW: Endpoint Temporal para Probar el Envío de Correos ---
+    public class TestEmailDto
+    {
+        public string ToEmail { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
+    }
+
+        
 
 }

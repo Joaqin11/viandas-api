@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;             // NEW
 using System.Text;                                // NEW
 using Microsoft.OpenApi.Models;                   // NEW - Para configuración de Swagger JWT
 using System.IdentityModel.Tokens.Jwt;
+using AccuViandas.Services; // NEW
+using Microsoft.Extensions.Logging; // NEW: Para usar ILogger
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,12 @@ builder.Services.AddSwaggerGen();
 // Asegúrate de tener 'using Microsoft.EntityFrameworkCore;' al inicio del archivo si no está
 builder.Services.AddDbContext<MenuDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+// --- FIN DE LA ADICIÓN ---
+
+// --- AGREGAR ESTO para configurar Entity Framework Core con SQLite ---
+// Esto es para guardar datos historicos
+builder.Services.AddDbContext<ArchiveDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ArchiveConnection")));
 // --- FIN DE LA ADICIÓN ---
 
 // --- NEW: Configuración de JWT Authentication ---
@@ -102,6 +110,17 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 // --- END NEW: Configuración de Swagger para que admita JWT ---
+
+// --- NEW: Registrar Email Service ---
+builder.Services.AddTransient<IEmailService, EmailService>(); // Registra el servicio de email
+// --- END NEW ---
+
+// --- NEW: Register the Background Service ---
+builder.Services.AddHostedService<MenuEmailBackgroundService>();
+// --- END NEW ---
+// --- NEW: Register the Background Service ---
+builder.Services.AddHostedService<DataMaintenanceBackgroundService>(); // NUEVO: Servicio de mantenimiento de datos
+// --- END NEW ---
 
 var app = builder.Build();
 
