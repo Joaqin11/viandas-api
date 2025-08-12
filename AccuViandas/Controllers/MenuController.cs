@@ -27,7 +27,7 @@ namespace AccuViandas.Controllers
         /// </summary>
         /// <param name="date">La fecha del menú en formato YYYY-MM-DD.</param>
         /// <returns>El menú diario para la fecha especificada, o un 404 si no se encuentra.</returns>
-        [HttpGet("{date}")] // Define un endpoint GET que acepta un parámetro 'date' en la URL
+        [HttpGet("{date:datetime}")] // Define un endpoint GET que acepta un parámetro 'date' en la URL
         public async Task<ActionResult<DailyMenu>> GetMenuByDate(DateTime date)
         {
             // Busca un DailyMenu en la base de datos por la fecha (solo la parte de la fecha)
@@ -237,5 +237,23 @@ namespace AccuViandas.Controllers
             }
             return menus;
         }
+
+        // GET: api/Menu/{id}
+        [HttpGet("{id:int}")] // Define la ruta para obtener por ID
+                          // [Authorize(Roles = "Admin")] // Puedes poner Authorize aquí si es diferente al controlador
+        public async Task<ActionResult<DailyMenuItem>> GetMenu(int id) // Asegúrate que el modelo Menu tenga Id, Name, Category
+        {
+            // Busca el menú por su ID
+            var menu = await _context.DailyMenuItems // Asegúrate que 'Menus' es el DbSet correcto para tu tabla de menús
+                                     .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (menu == null)
+            {
+                return NotFound($"No se encontró el menú con ID {id}."); // Mensaje si no se encuentra
+            }
+
+            return Ok(menu); // Devuelve el menú encontrado
+        }
+
     }
 }

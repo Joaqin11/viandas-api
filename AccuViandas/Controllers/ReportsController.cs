@@ -1,5 +1,6 @@
 ﻿// Controllers/ReportsController.cs
 using AccuViandas.Data;
+using AccuViandas.Models;
 using ClosedXML.Excel; // Necesario para ClosedXML
 using ClosedXML.Excel.Drawings;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +24,7 @@ namespace AccuViandas.Controllers
         }
 
         [HttpGet("weekly-menu-summary-excel")]
+        [Authorize(Roles = "Admin")] // Solo administradores pueden acceder a este endpoint
         public async Task<IActionResult> DownloadWeeklyMenuSummaryExcel(
             [FromQuery] DateTime? startDate = null,
             [FromQuery] DateTime? endDate = null)
@@ -361,5 +363,136 @@ namespace AccuViandas.Controllers
             }
 
         }
+
+        // --- Nuevo Endpoint para el Resumen Semanal (JSON) ---
+        [HttpGet("weekly-menu-summary-json")]
+        [Authorize(Roles = "Admin")] // Solo administradores pueden acceder a este endpoint
+        public async Task<ActionResult<List<WeeklySummaryDto>>> GetWeeklyMenuSummaryJson(
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null)
+        {
+            if (!startDate.HasValue || !endDate.HasValue)
+            {
+                var today = DateTime.Today;
+                int diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
+                startDate = today.AddDays(-1 * diff).Date;
+                endDate = startDate.Value.AddDays(6).Date;
+            }
+
+            if (startDate.Value > endDate.Value)
+            {
+                return BadRequest("La fecha de inicio no puede ser posterior a la fecha de fin.");
+            }
+
+            // --- REUTILIZACIÓN de la Lógica del Excel, pero devolviendo un DTO ---
+            var menuSelections = await _context.UserMenuSelections
+                .Where(ums => ums.IsActive &&
+                                 ums.DailyMenu.Date.Date >= startDate.Value.Date &&
+                                 ums.DailyMenu.Date.Date <= endDate.Value.Date)
+                .Include(ums => ums.User)
+                .Include(ums => ums.DailyMenu)
+                    .ThenInclude(dm => dm.Items)
+                .OrderBy(ums => ums.User.Username)
+                .ThenBy(ums => ums.DailyMenu.Date)
+                .ToListAsync();
+
+            if (!menuSelections.Any())
+            {
+                return NotFound("No se encontraron selecciones de menú para el rango de fechas especificado.");
+            }
+
+            var reportData = menuSelections
+                .GroupBy(s => new { s.User.Id, s.User.Username })
+                .Select(userGroup =>
+                {
+                    var dailySelections = new Dictionary<DayOfWeek, List<string>>();
+                    var allObservations = new List<string>();
+
+                    foreach (var selection in userGroup)
+                    {
+                        var day = selection.DailyMenu.Date.DayOfWeek;
+                        if (!dailySelections.ContainsKey(day))
+                        {
+                            dailySelections[day] = new List<string>();
+                        }
+                        var selectedMenuItem = selection.DailyMenu.Items.FirstOrDefault(item => item.Category == selection.SelectedCategory);
+                        if (selectedMenuItem != null)
+                        {
+                            // Formato: CATEGORÍA
+                            dailySelections[day].Add(selection.SelectedCategory.ToString());
+                        }
+                        if (!string.IsNullOrEmpty(selection.Observation))
+                        {
+                            allObservations.Add(selection.Observation);
+                        }
+                    }
+
+                    return new WeeklySummaryDto
+                    {
+                        UserName = userGroup.Key.Username,
+                        DailySelections = dailySelections,
+                        AllObservations = string.Join(" | ", allObservations.Distinct())
+                    };
+                })
+                .OrderBy(r => r.UserName)
+                .ToList();
+
+            // Simplemente devuelve la lista de DTOs
+            return Ok(reportData);
+        }
+
+        // --- Nuevo Endpoint para Cantidades Totales (JSON) ---
+        [HttpGet("total-menu-quantities-json")]
+        [Authorize(Roles = "Admin")] // Solo administradores pueden acceder a este endpoint
+        public async Task<ActionResult<List<TotalQuantitiesDto>>> GetTotalMenuQuantitiesJson(
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null)
+        {
+            if (!startDate.HasValue || !endDate.HasValue)
+            {
+                var today = DateTime.Today;
+                int diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
+                startDate = today.AddDays(-1 * diff).Date;
+                endDate = startDate.Value.AddDays(6).Date;
+            }
+
+            if (startDate.Value > endDate.Value)
+            {
+                return BadRequest("La fecha de inicio no puede ser posterior a la fecha de fin.");
+            }
+
+            // --- REUTILIZACIÓN de la Lógica del Excel, pero devolviendo un DTO ---
+            var menuSelections = await _context.UserMenuSelections
+                .Where(ums => ums.IsActive &&
+                                 ums.DailyMenu.Date.Date >= startDate.Value.Date &&
+                                 ums.DailyMenu.Date.Date <= endDate.Value.Date)
+                .Select(ums => new
+                {
+                    Date = ums.DailyMenu.Date.Date,
+                    Category = ums.SelectedCategory.ToString()
+                })
+                .ToListAsync();
+
+            if (!menuSelections.Any())
+            {
+                return NotFound("No se encontraron selecciones de menú para el rango de fechas especificado.");
+            }
+
+            // Agrupamos por la fecha completa para mantener el orden cronológico
+            var reportData = menuSelections
+                .OrderBy(s => s.Date)
+                .GroupBy(s => s.Date)
+                .Select(dayGroup => new TotalQuantitiesDto
+                {
+                    Day = new CultureInfo("es-ES").DateTimeFormat.GetDayName(dayGroup.Key.DayOfWeek),
+                    Categories = dayGroup.GroupBy(s => s.Category)
+                                        .ToDictionary(g => g.Key, g => g.Count())
+                })
+                .ToList();
+
+            // Devuelve la lista de DTOs ya ordenada por fecha
+            return Ok(reportData);
+        }
+
     }
 }

@@ -30,7 +30,7 @@ namespace AccuViandas.Controllers
             public string SelectedCategory { get; set; } // "Clasica", "Veggie", etc.
 
             // --- NEW: Propiedad para la Observación ---
-            public string Observation { get; set; } // Puede ser null
+            public string? Observation { get; set; } // Puede ser null
                                                     // --- END NEW ---
         }
 
@@ -44,7 +44,7 @@ namespace AccuViandas.Controllers
             public DateTime SelectionDateTime { get; set; }
             public bool IsActive { get; set; }
             public string SelectedMenuItemName { get; set; } // Nombre del plato elegido
-            public string Observation { get; set; } // Incluir la observación en la respuesta
+            public string? Observation { get; set; } // Incluir la observación en la respuesta
         }
 
         // --- Endpoints para Selecciones ---
@@ -158,7 +158,7 @@ namespace AccuViandas.Controllers
                 SelectionDateTime = selection.SelectionDateTime,
                 IsActive = selection.IsActive,
                 SelectedMenuItemName = selectedMenuItem?.Name, // Puede ser null si el item no se encuentra
-                Observation = selection.Observation // Incluir la observación
+                Observation = selection?.Observation // Incluir la observación
             };
 
             return Ok(responseDto);
@@ -319,6 +319,25 @@ namespace AccuViandas.Controllers
                                             .ToListAsync();
 
             return Ok(totalSummary);
+        }
+
+        // En tu UserSelectionController.cs
+        [HttpGet("userHasSelectionForDate")]
+        public async Task<ActionResult<bool>> UserHasSelectionForDate([FromQuery] int userId, [FromQuery] DateTime date)
+        {
+            var dateOnly = date.Date; // Asegúrate de comparar solo la parte de la fecha
+                                      //var hasSelection = await _context.UserMenuSelections
+                                      //                                 .AnyAsync(us => us.UserId == userId && us.SelectionDateTime.Date == dateOnly);
+
+            // --- LÍNEA CORREGIDA AQUÍ ---
+            var hasSelection = await (from ums in _context.UserMenuSelections
+                                      join dm in _context.DailyMenus
+                                      on ums.DailyMenuId equals dm.Id
+                                      where ums.UserId == userId && dm.Date == dateOnly
+                                      select ums)
+                              .AnyAsync();
+
+            return Ok(hasSelection);
         }
     }
 }
